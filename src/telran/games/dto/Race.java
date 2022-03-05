@@ -13,6 +13,9 @@ public class Race {
 	private int maxSleep;
 	private int winner = -1;
 	private LocalTime startTime;
+	// It isn't necessary to declare ArrayList as static, because 
+	// we will have only one instance of Race.
+	// startTime isn't static!
 	private static ArrayList<Runner> runners = new ArrayList<>();
 	 
 	public Race() {
@@ -48,6 +51,7 @@ public class Race {
 			startTime = LocalTime.now();
 		}
 	}
+	// V.R. And getRunners() hasn't to be static
 	public static ArrayList<Runner> getRunners() {
 		return runners;
 	}

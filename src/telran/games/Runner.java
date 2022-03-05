@@ -38,6 +38,7 @@ public class Runner extends Thread {
 			System.out.println(runnerId);
 		}
 
+		// V.R. race.getRunners()
 		synchronized (Race.getRunners()) {
 			race.setWinner(runnerId);
 			runTime = ChronoUnit.MILLIS.between(race.getStartTime(), LocalTime.now());
