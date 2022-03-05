@@ -1,10 +1,13 @@
 package telran.games.controller;
+//IlyaL 
 
+import java.util.ArrayList;
 import java.util.stream.IntStream;
 
-import telran.games.dto.Race;
 import telran.games.Runner;
+import telran.games.dto.Race;
 import telran.view.*;
+
 
 public class RaceAppl {
 
@@ -13,12 +16,12 @@ public class RaceAppl {
 	private static final int MAX_DISTANCE = 1000;
 	private static final int MIN_SLEEP = 2;
 	private static final int MAX_SLEEP = 5;
+	
 	public static void main(String[] args) {
 		InputOutput io = new ConsoleInputOutput();
 		Item[] items = getItems();
 		Menu menu = new Menu("Race Game", items);
 		menu.perform(io);
-
 	}
 
 	private static Item[] getItems() {
@@ -29,19 +32,28 @@ public class RaceAppl {
 		return res;
 	}
 	static void startGame(InputOutput io) {
-		int nThreads = io.readInt("Enter number of the runners", 2, MAX_THREADS);
-		int distance = io.readInt("Enter distance", MIN_DISTANCE, MAX_DISTANCE);
-		Race race = new Race(distance, MIN_SLEEP, MAX_SLEEP);
+		int nThreads = io.readInt(String.format("Enter number of the runners from 2 to %d", MAX_THREADS), 
+																		2, MAX_THREADS);
+		int distance = io.readInt(String.format("Enter distance from %d to %d", MIN_DISTANCE, MAX_DISTANCE), 
+																		MIN_DISTANCE, MAX_DISTANCE);
 		Runner[] runners = new Runner[nThreads];
+		Race race = new Race();		 
+		race.setParams(distance, MIN_SLEEP, MAX_SLEEP);
 		startRunners(runners, race);
 		joinRunners(runners);
 		displayWinner(race);
 	}
 
 	private static void displayWinner(Race race) {
-		System.out.println("Congratulations to runner " + race.getWinner());
-		
-	}
+		System.out.println("The race winner is " + race.getWinner());
+		ArrayList<Runner> runners = Race.getRunners();
+		System.out.println("\tResults Table");
+		System.out.println("place\t racer number\t time");
+		IntStream.range(0, runners.size())
+		.forEach(i->System.out.printf("  %d\t\t%d\t%d\n",
+				i+1,runners.get(i).getRunnerId(), runners.get(i)
+				.getRunTime()));
+	}	
 
 	private static void joinRunners(Runner[] runners) {
 		IntStream.range(0, runners.length).forEach(i -> {
@@ -55,6 +67,7 @@ public class RaceAppl {
 	}
 
 	private static void startRunners(Runner[] runners, Race race) {
+		race.setStartTime();
 		IntStream.range(0, runners.length).forEach(i -> {
 			runners[i] = new Runner(race, i + 1);
 			runners[i].start();
